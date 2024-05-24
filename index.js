@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import UserRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import servieRoutes from "./routes/service.route.js";
+import findNearestRoutes from "./routes/findNearest.route.js"
 import cookieParser from "cookie-parser";
 import path from "path";
 import http from "http";
@@ -45,6 +46,7 @@ server.listen(process.env.PORT || 3000, () => {
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/servie", servieRoutes);
+app.use("/api/findnearest", findNearestRoutes);
 
 
 app.use((err, req, res, next) => {
