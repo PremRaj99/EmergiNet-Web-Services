@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const test = (req, res) => {
   res.json({ message: "API is working!" });
@@ -118,14 +119,42 @@ export const getusers = async (req, res, next) => {
 
 export const getuser = async (req, res, next) => {
   try {
-    const user = await User.findOne({_id : req.params.userId})
+    const user = await User.findOne({ _id: req.params.userId });
 
-    if(!user) {
-      return next(errorHandler(404, 'User not found'))
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
     }
-    const {password, ...rest} = user._doc;
-    res.status(200).json(rest)
+    const { password, ...rest } = user._doc;
+    res.status(200).json(rest);
   } catch (error) {
-   return next(error);
+    return next(error);
   }
-}
+};
+
+export const refreshToken = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+    const token = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+        isServiceProvider: user.isServiceProvider,
+      },
+      process.env.JWT_SECRET
+    );
+    const { password, ...rest } = user._doc;
+    res
+      .status(200)
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .json(rest);
+  } catch (error) {
+    return next(error);
+  }
+};

@@ -12,13 +12,22 @@ export const registerServices = async (req, res, next) => {
     if (service) {
       return next(errorHandler(403, "You have already registered a service."));
     }
+    if (!req.body.longitude && !req.body.latitude) {
+      return next(errorHandler(400, "Please provide longitude and latitude."));
+    }
     const registerService = new Service({
       userId: req.params.userId,
       serviceName: req.body.serviceName,
       servicePicture: req.body.servicePicture,
       address: req.body.address,
       pin: req.body.pin,
-      location: req.body.location,
+      location: {
+        type: "Path",
+        cordinates: [
+          parseFloat(req.body.longitude),
+          parseFloat(req.body.latitude),
+        ],
+      },
     });
 
     await registerService.save();
@@ -81,7 +90,12 @@ export const deleteServices = async (req, res, next) => {
       },
       { new: true }
     );
-    res.status(200).json({ message: "Service has been deleted successfully. You are no longer service provider." });
+    res
+      .status(200)
+      .json({
+        message:
+          "Service has been deleted successfully. You are no longer service provider.",
+      });
   } catch (error) {
     return next(error);
   }
