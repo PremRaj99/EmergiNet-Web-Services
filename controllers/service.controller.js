@@ -1,5 +1,5 @@
-import Service from "../models/service.model";
-import User from "../models/user.model";
+import Service from "../models/service.model.js";
+import User from "../models/user.model.js";
 
 export const registerServices = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
