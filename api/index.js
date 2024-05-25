@@ -65,6 +65,12 @@ server.listen(process.env.PORT || 3000, () => {
   console.log(`server is running on port ${ process.env.PORT || 3000 }`);
 });
 
+app.use(express.static(path.join(__dirname, "/client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
+
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/service", serviceRoutes);
