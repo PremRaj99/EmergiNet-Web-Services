@@ -13,7 +13,7 @@ export const registerServices = async (req, res, next) => {
     if (service) {
       return next(errorHandler(403, "You have already registered a service."));
     }
-    if (!req.body.longitude && !req.body.latitude) {
+    if (!req.body.longitude || !req.body.latitude) {
       return next(errorHandler(400, "Please provide longitude and latitude."));
     }
     const registerService = new Service({
@@ -23,8 +23,8 @@ export const registerServices = async (req, res, next) => {
       address: req.body.address,
       pin: req.body.pin,
       location: {
-        type: "Path",
-        cordinates: [
+        type: "Point",
+        coordinates: [
           parseFloat(req.body.longitude),
           parseFloat(req.body.latitude),
         ],

@@ -11,12 +11,12 @@ export const search = async (req, res, next) => {
             coordinates: [parseFloat(longitude), parseFloat(latitude)],
           },
           key: "location",
-          maxDistance: parseFloat(1000) * 1609,
+          maxDistance: 1000 * 1609,
           distanceField: "dist.calculated",
           spherical: true,
         },
       },
-    ]).sort({ dist: { calculated: -1 } });
+    ]).sort({ "dist.calculated": -1 });
 
     res.status(200).json(result);
   } catch (error) {
