@@ -27,7 +27,7 @@ const __dirname = path.resolve();
 const app = express();
 
 app.use(cors({
-  origin: "*",
+  origin: "https://emergi-net-frontend.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }))
@@ -49,7 +49,7 @@ wss.on('connection', (ws, req) => {
 
     ws.on('close', () => {
       clients.delete(userId);
-      console.log("disconnect :" + userId)
+      console.log("disconnect : " + userId)
     });
 
     ws.on('message', (message) => {
