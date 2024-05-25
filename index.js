@@ -36,6 +36,26 @@ const server = http.createServer(app);
 
 const wss = new WebSocketServer({ server });
 
+export const clients = new Map();
+
+wss.on('connection', (ws, req) => {
+  // Use query parameters to identify the user
+  const params = new URLSearchParams(req.url.split('?')[1]);
+  const userId = params.get('userId');
+
+  if (userId) {
+    clients.set(userId, ws);
+
+    ws.on('close', () => {
+      clients.delete(userId);
+    });
+
+    ws.on('message', (message) => {
+      console.log(`Received message from user ${userId}: ${message}`);
+    });
+  }
+});
+
 app.use(express.json());
 app.use(cookieParser());
 
