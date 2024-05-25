@@ -42,12 +42,14 @@ wss.on('connection', (ws, req) => {
   // Use query parameters to identify the user
   const params = new URLSearchParams(req.url.split('?')[1]);
   const userId = params.get('userId');
+  console.log(userId + "is connected")
 
   if (userId) {
     clients.set(userId, ws);
 
     ws.on('close', () => {
       clients.delete(userId);
+      console.log("disconnect :" + userId)
     });
 
     ws.on('message', (message) => {

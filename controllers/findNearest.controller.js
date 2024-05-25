@@ -23,10 +23,10 @@ export const search = async (req, res, next) => {
       const client = clients.get(result.userId);
 
       if (client && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ type: "data", data: data }));
+        client.send(JSON.stringify({ type: "data", data: result.dist.calculated }));
         res
           .status(200)
-          .json({ success: true, message: "Data sent to the user" });
+          .json({ success: true, message: `Data sent to the user : ${result.userId}` });
       }
     }
     res.status(404).json({ success: false, message: "User not connected" });
