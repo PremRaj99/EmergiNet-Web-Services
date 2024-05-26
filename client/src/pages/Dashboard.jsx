@@ -26,7 +26,7 @@ export default function DashBoard() {
       {/* ------------right---------------------- */}
 
       {/* profile...... */}
-      {tab === "alert" && <DashAlert />}
+      {tab === "dashboard" && <DashAlert />}
       {/* profile...... */}
       {tab === "profile" && <DashProfile />}
       {/* users........ */}

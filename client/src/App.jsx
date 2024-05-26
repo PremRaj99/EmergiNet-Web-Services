@@ -8,6 +8,7 @@ import FooterComponent from "./components/Footer";
 import DashBoard from "./pages/Dashboard";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 
 export default function App() {
   return (
@@ -17,9 +18,12 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/sign-in" element= {< SignIn />} />
-        <Route path="/sign-up" element= {< SignUp />} />
+        <Route element={<OnlyAdminPrivateRoute />}>
+          <Route path="/dashboard" element={<DashBoard />} />
+        </Route>
+
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
       </Routes>
       <FooterComponent />
     </BrowserRouter>

@@ -46,9 +46,9 @@ export default function DashSideBar() {
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
           {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=alert">
+            <Link to="/dashboard?tab=dashboard">
               <Sidebar.Item
-                active={tab === "alert"}
+                active={tab === "dashboard"}
                 icon={HiChartPie}
                 as={"div"}
               >
@@ -69,15 +69,6 @@ export default function DashSideBar() {
           </Link>
           {currentUser.isAdmin && (
             <>
-              <Link to="/dashboard?tab=posts">
-                <Sidebar.Item
-                  active={tab === "posts"}
-                  icon={HiDocumentText}
-                  as={"div"}
-                >
-                  Posts
-                </Sidebar.Item>
-              </Link>
               <Link to="/dashboard?tab=users">
                 <Sidebar.Item
                   active={tab === "users"}

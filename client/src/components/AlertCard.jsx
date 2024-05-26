@@ -22,7 +22,7 @@ export default function AlertCard() {
             <p>latitude: <span className="text-gray-800 font-normal">22.4578</span></p>
 
             <p className="text-sky-400 cursor-pointer hover:underline">visit</p>
-            <p>Time of Incednet: <span className="text-gray-800 font-normal">8:23AM</span> </p>
+            <p>Time of Incident: <span className="text-gray-800 font-normal">8:23AM</span> </p>
           </div>
         </div>
       </div>

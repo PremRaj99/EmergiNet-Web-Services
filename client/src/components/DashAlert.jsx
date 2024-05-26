@@ -13,6 +13,30 @@ export default function DashAlert() {
   const [userIdToDelete, setUserIdToDelete] = useState("");
   const [online, setOnline] = useState(false);
 
+  const connectWs = async () => {
+    const ws = new WebSocket(`ws://localhost:3000?userId=${currentUser.id}`);
+    ws.onopen = () => {
+      console.log("Connected to the server");
+      setOnline(true);
+    };
+
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log("Message from server:", message);
+      onMessage(message);
+    };
+
+    ws.onclose = () => {
+      console.log("Disconnected from the server");
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    return ws;
+  };
+
   const handleDeleteUser = async () => {};
   const handleShowMore = async () => {};
   return (
@@ -26,11 +50,16 @@ export default function DashAlert() {
           ></div>
           <p className="text-gray-700">@PremRaj</p>
         </div>
-        <Button color="gray" onClick={() => setOnline(!online)}>
+        {/* <Button color="gray" onClick={() => setOnline(!online)}> */}
+        {!online ? (<Button color="gray" onClick={connectWs}>
+          {online ? "Connected" : "Disconnected"}
+        </Button>): (
+          <Button color="gray" onClick={() => setOnline(false)}>
           {online ? "Connected" : "Disconnected"}
         </Button>
+        )}
       </div>
-      {currentUser.isAdmin || currentUser.isServiceProvider ? (
+      {(currentUser.isAdmin || currentUser.isServiceProvider) && online ? (
         <>
           <div className=" p-4 border-b-2 my-2 ">Alert</div>
 
@@ -39,7 +68,7 @@ export default function DashAlert() {
           <AlertCard />
         </>
       ) : (
-        <p>You have no alert yet!</p>
+        <p className="text-center">You have no alert yet or not connected!</p>
       )}
 
       <Modal

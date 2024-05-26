@@ -1,5 +1,5 @@
-import { clients } from "../index.js";
 import Service from "../models/service.model.js";
+import { sendRequest } from "../index.js";
 
 export const search = async (req, res, next) => {
   const { longitude, latitude } = req.body;
@@ -19,20 +19,12 @@ export const search = async (req, res, next) => {
       },
     ]).sort({ "dist.calculated": 1 });
 
-    for (let i = 0; i < result.length; i++) {
-      const client = clients.get(result.userId);
+    sendRequest(req, result) &&   res.status(200).json(sendRequest(req, result));
 
-      if (client && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ type: "data", data: result.dist.calculated }));
-        res
-          .status(200)
-          .json({ success: true, message: `Data sent to the user : ${result.userId}` });
-      }
-    }
     res.status(404).json({ success: false, message: "User not connected" });
     // console.log(result[0].userId);
 
-    res.status(200).json(result);
+    // res.status(200).json(result);
   } catch (error) {
     return next(error);
   }
