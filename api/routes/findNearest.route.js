@@ -3,6 +3,6 @@ import { search } from '../controllers/findNearest.controller.js';
 
 const router = express.Router();
 
-router.post('/', search);
+router.post('/:userId', search);
 
 export default router;

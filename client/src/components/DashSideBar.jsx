@@ -45,7 +45,7 @@ export default function DashSideBar() {
     <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
-          {currentUser.isAdmin && (
+          {(currentUser.isAdmin || currentUser.isServiceProvider) && (
             <Link to="/dashboard?tab=dashboard">
               <Sidebar.Item
                 active={tab === "dashboard"}

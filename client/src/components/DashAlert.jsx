@@ -1,20 +1,44 @@
 import { Button, Modal, Table } from "flowbite-react";
-import React, { useState } from "react";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import AlertCard from "./AlertCard";
 
 export default function DashAlert() {
   const { currentUser } = useSelector((state) => state.user);
-  const [users, setUsers] = useState([]);
-  const [showMore, setShowMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [userIdToDelete, setUserIdToDelete] = useState("");
   const [online, setOnline] = useState(false);
+  const [alert, setAlert] = useState([]);
+  const [ws, setWs] = useState(null);
+
+  // const connectWs = async () => {
+  //   const ws = new WebSocket(`ws://localhost:3000?userId=${currentUser.id}`);
+  //   ws.onopen = () => {
+  //     console.log("Connected to the server");
+  //     setOnline(true);
+  //   };
+
+  //   ws.onmessage = (event) => {
+  //     const message = JSON.parse(event.data);
+  //     console.log("Message from server:", message);
+  //     setAlert({ ...alert, message });
+  //     onmessage(message);
+  //   };
+
+  //   ws.onclose = () => {
+  //     console.log("Disconnected from the server");
+  //   };
+
+  //   ws.onerror = (error) => {
+  //     console.error("WebSocket error:", error);
+  //   };
+
+  //   return ws;
+  // };
 
   const connectWs = async () => {
-    const ws = new WebSocket(`ws://localhost:3000?userId=${currentUser.id}`);
+    const ws = new WebSocket(`ws://localhost:3000?userId=${currentUser._id}`);
+
     ws.onopen = () => {
       console.log("Connected to the server");
       setOnline(true);
@@ -22,19 +46,40 @@ export default function DashAlert() {
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      console.log("Message from server:", message);
-      onMessage(message);
+      // console.log("Message from server:", message);
+      setAlert((prev) => [message, ...prev]);
     };
 
     ws.onclose = () => {
       console.log("Disconnected from the server");
+      setOnline(false);
     };
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
     };
 
-    return ws;
+    setWs(ws);
+  };
+  useEffect(() => {
+    connectWs();
+
+    // Cleanup function to close WebSocket when component unmounts
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, [currentUser, onmessage]);
+
+  const disconnectWs = () => {
+    if (ws) {
+      console.log("Closing WebSocket connection");
+      ws.close();
+      setWs(null);
+      setOnline(false);
+      setAlert([]);
+    }
   };
 
   const handleDeleteUser = async () => {};
@@ -48,24 +93,22 @@ export default function DashAlert() {
               online ? "bg-green-500" : "bg-red-600"
             }`}
           ></div>
-          <p className="text-gray-700">@PremRaj</p>
+          <p className="text-gray-700">@{currentUser.username}</p>
         </div>
         {/* <Button color="gray" onClick={() => setOnline(!online)}> */}
-        {!online ? (<Button color="gray" onClick={connectWs}>
-          {online ? "Connected" : "Disconnected"}
-        </Button>): (
-          <Button color="gray" onClick={() => setOnline(false)}>
+
+        <Button color="gray" onClick={online ? disconnectWs : connectWs}>
           {online ? "Connected" : "Disconnected"}
         </Button>
-        )}
       </div>
       {(currentUser.isAdmin || currentUser.isServiceProvider) && online ? (
         <>
           <div className=" p-4 border-b-2 my-2 ">Alert</div>
+          {alert &&
+            alert.map((alert) => {
 
-          <AlertCard />
-          <AlertCard />
-          <AlertCard />
+              return <AlertCard key={alert.userId} alert={alert.data} />;
+            })}
         </>
       ) : (
         <p className="text-center">You have no alert yet or not connected!</p>

@@ -44,6 +44,7 @@ wss.on("connection", (ws, req) => {
   // Use query parameters to identify the user
   const params = new URLSearchParams(req.url.split("?")[1]);
   const userId = params.get("userId");
+  console.log("connected : "+ userId)
 
   if (userId) {
     clients.set(userId, ws);
@@ -53,19 +54,20 @@ wss.on("connection", (ws, req) => {
       console.log("disconnect : " + userId);
     });
 
-    ws.on("accept-message", (message) => {
+    ws.on("message", (message) => {
       console.log(` ${userId} is on the way : ${message}`);
     });
   }
 });
-export const sendRequest = (req, result) => {
+export const sendRequest = async(req, result, userData) => {
   for (let i = 0; i < result.length; i++) {
     const client = clients.get(result[i].userId);
     console.log(result[i].userId);
     // console.log(clients);
+    const data = req.body
 
     if (client && client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify({ type: "data", data: req.body }));
+      client.send(JSON.stringify({ type: "data", data: {data , userData} }));
       return result[i].userId;
     }
   }

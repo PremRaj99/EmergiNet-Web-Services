@@ -9,6 +9,7 @@ import DashBoard from "./pages/Dashboard";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
+import OnlyServiceProviderPrivateRoute from "./components/OnlyServiceProviderPrivateRoute";
 
 export default function App() {
   return (
@@ -18,10 +19,12 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route element={<OnlyAdminPrivateRoute />}>
-          <Route path="/dashboard" element={<DashBoard />} />
+        <Route element={<OnlyServiceProviderPrivateRoute />}>
+          <Route element={<OnlyAdminPrivateRoute />}>
+            {/* <Route path="/dashboard" element={<DashBoard />} /> */}
+          </Route>
         </Route>
-
+        <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
       </Routes>

@@ -60,7 +60,13 @@ export const updateServices = async (req, res, next) => {
           servicePicture: req.body.servicePicture,
           address: req.body.address,
           pin: req.body.pin,
-          location: req.body.location,
+          location: {
+            type: "Point",
+            coordinates: [
+              parseFloat(req.body.longitude),
+              parseFloat(req.body.latitude),
+            ],
+          },
         },
       },
       { new: true }

@@ -110,7 +110,7 @@ export default function Header() {
                 {currentUser.email}
               </span>
             </Dropdown.Header>
-            {currentUser.isAdmin && (
+            {(currentUser.isAdmin || currentUser.isServiceProvider) && (
               <Link to="/dashboard?tab=dashboard">
                 <Dropdown.Item>Dashboard</Dropdown.Item>
               </Link>

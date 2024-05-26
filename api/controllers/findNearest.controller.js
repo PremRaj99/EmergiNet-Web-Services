@@ -1,5 +1,6 @@
 import Service from "../models/service.model.js";
 import { sendRequest } from "../index.js";
+import User from "../models/user.model.js";
 
 export const search = async (req, res, next) => {
   const { longitude, latitude } = req.body;
@@ -19,7 +20,13 @@ export const search = async (req, res, next) => {
       },
     ]).sort({ "dist.calculated": 1 });
 
-    sendRequest(req, result) &&   res.status(200).json(sendRequest(req, result));
+    const userData = await User.findById(req.params.userId);
+    console.log(userData)
+
+    // const [password, ...rest] = userData._doc;
+
+
+    sendRequest(req, result, userData) &&   res.status(200).json(sendRequest(req, result, userData));
 
     res.status(404).json({ success: false, message: "User not connected" });
     // console.log(result[0].userId);
