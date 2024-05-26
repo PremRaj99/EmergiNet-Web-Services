@@ -70,14 +70,14 @@ export default function Header() {
       {/* ----------Input Box for Search Bar in PC View------------------ */}
 
       <form onSubmit={handleSubmit}>
-        <TextInput
+        {/* <TextInput
           type="text"
           placeholder="Search..."
           rightIcon={AiOutlineSearch}
           className="hidden lg:inline"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        /> */}
       </form>
 
       {/* ----------- Search in Mobile View -------------------- */}
